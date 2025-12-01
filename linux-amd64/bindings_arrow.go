@@ -151,7 +151,8 @@ func SchemaFromArrow(conn Connection, schema *arrow.Schema) (ArrowConvertedSchem
 	return ArrowConvertedSchema{Ptr: unsafe.Pointer(convertedSchema)}, errData
 }
 
-// DataChunkFromArrow creates a new DataChunk and moves the Arrow RecordBatch into it using the provided Connection and ArrowConvertedSchema.
+// DataChunkFromArrow creates a new DataChunk and moves the Arrow RecordBatch into it using the provided Connection.
+// The schema for the data chunk is derived from the RecordBatch.
 // The returned DataChunk must be destroyed with DestroyDataChunk.
 // The returned ErrorData must be checked for errors and destroyed with DestroyErrorData.
 func NewDataChunkFromArrow(conn Connection, rec arrow.RecordBatch) (DataChunk, ErrorData) {
@@ -161,7 +162,8 @@ func NewDataChunkFromArrow(conn Connection, rec arrow.RecordBatch) (DataChunk, E
 	return chunk, MoveArrowToDataChunk(conn, rec, chunk)
 }
 
-// MoveArrowToDataChunk moves an Arrow RecordBatch into the provided DuckDB DataChunk using the provided Connection and ArrowConvertedSchema.
+// MoveArrowToDataChunk moves an Arrow RecordBatch into the provided DuckDB DataChunk using the provided Connection.
+// The schema for the data chunk is derived from the RecordBatch.
 // The returned DataChunk must be destroyed with DestroyDataChunk.
 // The returned ErrorData must be checked for errors and destroyed with DestroyErrorData.
 func MoveArrowToDataChunk(conn Connection, rec arrow.RecordBatch, chunk DataChunk) ErrorData {
